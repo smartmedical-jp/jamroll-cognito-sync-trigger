@@ -1,0 +1,1 @@
+package jamroll_cognito_sync_trigger
