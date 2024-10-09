@@ -1,10 +1,6 @@
 name: Dev Lambda Deploy
 
 on:
-  # TODO 消す
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
