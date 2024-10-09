@@ -25,5 +25,5 @@ runs:
         run: |
           aws lambda update-function-code \
           --function-name ${{ inputs.env-name }}-${{ inputs.dir-name }} \
-          --zip-file fileb://./tmp/${{ inputs.dir-name }}/function.zip
+          --zip-file fileb://tmp/${{ inputs.dir-name }}/function.zip
 
