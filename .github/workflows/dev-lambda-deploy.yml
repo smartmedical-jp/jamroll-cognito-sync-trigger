@@ -16,13 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Generate Zip
         run: |
           make generate
 
+  upload-zip:
+    name: upload-zip
+    needs: [generate-zip]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Upload Zip Migrateuser
         uses: actions/upload-artifact@v4
         with:
