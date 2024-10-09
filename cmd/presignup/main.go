@@ -1,4 +1,4 @@
-//go:generate make -C ../../ gen DIR=migrate_user
+//go:generate make -C ../../ gen DIR=presignup
 package main
 
 import (
@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	lambda.Start(handler.MigrateUserHandler)
+	lambda.Start(handler.PreSignupHandler)
 }
