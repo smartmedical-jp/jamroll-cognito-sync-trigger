@@ -10,6 +10,19 @@ func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.C
 	if err != nil {
 		return event, err
 	}
+	event.CognitoEventUserPoolsMigrateUserResponse.UserAttributes = map[string]string{
+		"email":          event.UserName,
+		"email_verified": "true",
+	}
+	event.CognitoEventUserPoolsMigrateUserResponse.FinalUserStatus = "CONFIRMED"
+	event.CognitoEventUserPoolsMigrateUserResponse.MessageAction = "SUPPRESS"
 
 	return event, nil
 }
+
+// Firebase にユーザが存在するか確認
+//func checkUserExistInFirebase(event events.CognitoEventUserPoolsMigrateUser) error {
+//	// Firebase にユーザが存在するか確認
+//
+//	return nil
+//}
