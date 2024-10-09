@@ -23,9 +23,30 @@ jobs:
         run: |
           make generate
 
+  upload-zip:
+    name: upload-zip
+    needs: [generate-zip]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload Zip Migrateuser
+        uses: actions/upload-artifact@v4
+        with:
+          name: migrateuser
+          path: tmp/migrateuser/function.zip
+
+      - name: Upload Zip Presignup
+        uses: actions/upload-artifact@v4
+        with:
+          name: presignup
+          path: tmp/presignup/function.zip
+
   deploy:
     name: deploy
-    needs: [generate-zip]
+    needs: [upload-zip]
     runs-on: ubuntu-latest
 
     steps:
