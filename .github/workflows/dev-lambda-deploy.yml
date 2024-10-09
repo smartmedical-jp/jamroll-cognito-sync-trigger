@@ -20,14 +20,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy zip migrateuser
-        uses: .github/actions/lambda-deploy
+        uses: ./.github/actions/lambda-deploy
         with:
           assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
           env-name: dev
           dir-name: migrateuser
 
       - name: Deploy zip presignup
-        uses: .github/actions/lambda-deploy
+        uses: ./.github/actions/lambda-deploy
         with:
           assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
           env-name: dev
