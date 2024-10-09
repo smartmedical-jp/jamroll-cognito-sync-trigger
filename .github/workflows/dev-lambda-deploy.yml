@@ -36,13 +36,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: migrateuser
-          path: tmp/migrateuser/function.zip
+          path: /tmp/migrateuser/function.zip
 
       - name: Upload Zip Presignup
         uses: actions/upload-artifact@v4
         with:
           name: presignup
-          path: tmp/presignup/function.zip
+          path: /tmp/presignup/function.zip
 
   deploy:
     name: deploy
