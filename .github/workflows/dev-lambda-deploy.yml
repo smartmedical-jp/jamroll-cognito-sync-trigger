@@ -28,5 +28,12 @@ jobs:
         with:
           assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
           env-name: dev
+          dir-name: preauthentication
+
+      - name: Deploy zip presignup
+        uses: ./.github/actions/lambda-deploy
+        with:
+          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
+          env-name: dev
           dir-name: presignup
 
