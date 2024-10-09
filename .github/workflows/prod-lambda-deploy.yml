@@ -1,7 +1,9 @@
-name: Dev Lambda Deploy
+name: Stg Lambda Deploy
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - release
 
 permissions:
   id-token: write
@@ -19,14 +21,14 @@ jobs:
       - name: Deploy zip migrateuser
         uses: ./.github/actions/lambda-deploy
         with:
-          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
-          env-name: dev
+          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_PROD }}
+          env-name: prod
           dir-name: migrateuser
 
       - name: Deploy zip presignup
         uses: ./.github/actions/lambda-deploy
         with:
-          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
-          env-name: dev
+          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_PROD }}
+          env-name: prod
           dir-name: presignup
 
