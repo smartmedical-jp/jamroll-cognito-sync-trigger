@@ -5,11 +5,11 @@ import (
 	"github.com/smartmedical-jp/jam-roll-cognito-sync-trigger/pkg/log"
 )
 
-func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) error {
+func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
 	err := log.PrintEventLog(event)
 	if err != nil {
-		return err
+		return event, err
 	}
 
-	return nil
+	return event, nil
 }

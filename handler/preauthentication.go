@@ -5,11 +5,11 @@ import (
 	log2 "github.com/smartmedical-jp/jam-roll-cognito-sync-trigger/pkg/log"
 )
 
-func PreAuthenticationHandler(event events.CognitoEventUserPoolsPreAuthentication) error {
+func PreAuthenticationHandler(event events.CognitoEventUserPoolsPreAuthentication) (events.CognitoEventUserPoolsPreAuthentication, error) {
 	err := log2.PrintEventLog(event)
 	if err != nil {
-		return err
+		return event, err
 	}
 
-	return nil
+	return event, nil
 }
