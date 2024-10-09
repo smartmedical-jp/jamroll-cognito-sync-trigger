@@ -23,6 +23,12 @@ jobs:
         run: |
           make generate
 
+  upload-zip:
+    name: upload-zip
+    needs: [generate-zip]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Upload Zip Migrateuser
         uses: actions/upload-artifact@v4
         with:
@@ -37,7 +43,7 @@ jobs:
 
   deploy:
     name: deploy
-    needs: [generate-zip]
+    needs: [upload-zip]
     runs-on: ubuntu-latest
 
     steps:
@@ -48,13 +54,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: migrateuser
-          path: ./tmp/migrateuser
 
       - name: Download Zip Presignup
         uses: actions/download-artifact@v4
         with:
           name: presignup
-          path: ./tmp/presignup
 
       - name: Deploy Lambda Migateuser
         uses: ./.github/actions/lambda-deploy
