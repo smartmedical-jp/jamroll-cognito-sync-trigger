@@ -6,7 +6,7 @@ build: ## Build the binary file
 	@if [ -z "$(DIR)" ]; then echo "Please provide DIR as an argument. Example: make build DIR=folder_name"; exit 1; fi
 	rm -rf ./tmp/$(DIR)/*
 	mkdir -p ./tmp/$(DIR)
-	go build -o ./tmp/$(DIR)/bootstrap ./cmd/$(DIR)/main.go
+	GOOS=linux GOARCH=amd64 go build -o ./tmp/$(DIR)/bootstrap ./cmd/$(DIR)/main.go
 
 # 使用例: make zip DIR=hello
 zip: ## Zip the binary file
