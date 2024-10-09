@@ -1,5 +1,5 @@
 name: "Lambda Deploy"
-description: "Deploy Zip of code for Lambda function to AWS"
+description: "Deploy Zip of code for Lambda function to AWS Lambda"
 inputs:
   assume-role-arn:
     required: true
@@ -25,4 +25,4 @@ runs:
         run: |
           aws lambda update-function-code \
           --function-name ${{ inputs.env-name }}-${{ inputs.dir-name }} \
-          --zip-file fileb://./tmp/${{ inputs.dir-name }}/function.zip
+          --zip-file fileb://tmp/${{ inputs.dir-name }}/function.zip
