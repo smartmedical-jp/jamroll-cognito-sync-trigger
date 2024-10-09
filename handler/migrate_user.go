@@ -15,7 +15,7 @@ func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.C
 		"email_verified": "true",
 	}
 	event.CognitoEventUserPoolsMigrateUserResponse.FinalUserStatus = "CONFIRMED"
-	//event.CognitoEventUserPoolsMigrateUserResponse.MessageAction = "SUPPRESS"
+	event.CognitoEventUserPoolsMigrateUserResponse.MessageAction = "SUPPRESS"
 
 	return event, nil
 }
