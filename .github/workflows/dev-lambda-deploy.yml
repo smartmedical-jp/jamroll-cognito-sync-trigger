@@ -23,12 +23,6 @@ jobs:
         run: |
           make generate
 
-  upload-zip:
-    name: upload-zip
-    needs: [generate-zip]
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Upload Zip Migrateuser
         uses: actions/upload-artifact@v4
         with:
@@ -43,7 +37,7 @@ jobs:
 
   deploy:
     name: deploy
-    needs: [upload-zip]
+    needs: [generate-zip]
     runs-on: ubuntu-latest
 
     steps:
