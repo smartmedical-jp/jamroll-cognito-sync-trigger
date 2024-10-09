@@ -8,9 +8,7 @@ import (
 
 // PrintEventLog イベント全体をログに出力
 func PrintEventLog[
-	T events.CognitoEventUserPoolsMigrateUser |
-		events.CognitoEventUserPoolsPreSignup |
-		events.CognitoEventUserPoolsPreAuthentication,
+	T events.CognitoEventUserPoolsMigrateUser | events.CognitoEventUserPoolsPreSignup,
 ](event T) error {
 	eventJSON, err := json.MarshalIndent(event, "", "  ")
 	if err != nil {
