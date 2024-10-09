@@ -19,26 +19,26 @@ jobs:
         run: |
           make generate
 
-    deploy:
-      name: deploy
-      needs: [generate-zip]
-      runs-on: ubuntu-latest
+  deploy:
+    name: deploy
+    needs: [generate-zip]
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        - name: Deploy Lambda Migateuser
-          uses: ./.github/actions/lambda-deploy
-          with:
-            assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
-            env-name: dev
-            dir-name: migrateuser
+      - name: Deploy Lambda Migateuser
+        uses: ./.github/actions/lambda-deploy
+        with:
+          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
+          env-name: dev
+          dir-name: migrateuser
 
-        - name: Deploy Lambda Presignup
-          uses: ./.github/actions/lambda-deploy
-          with:
-            assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
-            env-name: dev
-            dir-name: presignup
+      - name: Deploy Lambda Presignup
+        uses: ./.github/actions/lambda-deploy
+        with:
+          assume-role-arn: ${{ vars.ASSUME_ROLE_ARN_DEV }}
+          env-name: dev
+          dir-name: presignup
 
