@@ -11,21 +11,18 @@ permissions:
   contents: read
 
 jobs:
-  generate-zip:
-    name: generate-zip
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Generate Zip
-        run: |
-          make -C ../../ generate
-
   upload-zip:
     name: upload-zip
-    needs: [generate-zip]
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Zip
+        run: |
+          make generate
+
       - name: Upload Zip Migrateuser
         uses: actions/upload-artifact@v4
         with:
@@ -40,7 +37,7 @@ jobs:
 
   deploy:
     name: deploy
-    needs: [generate-zip]
+    needs: [upload-zip]
     runs-on: ubuntu-latest
 
     steps:
