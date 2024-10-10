@@ -11,7 +11,7 @@ const (
 	TriggerSourceForgotPassword = "UserMigration_ForgotPassword"
 )
 
-func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
+func (h Handler) MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
 	err := log.PrintEventLog(event)
 	if err != nil {
 		return event, err
