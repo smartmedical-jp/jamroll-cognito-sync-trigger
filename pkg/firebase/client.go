@@ -19,8 +19,6 @@ func NewClient(ctx context.Context) (*auth.Client, error) {
 		return nil, err
 	}
 
-	fmt.Println("---------------firebaseAccessKey---------------", firebaseAccessKey)
-
 	dec, err := base64.StdEncoding.DecodeString(firebaseAccessKey)
 	if err != nil {
 		return nil, err
