@@ -6,6 +6,8 @@ import (
 	"jam-roll-cognito-sync-trigger/pkg/firebase"
 )
 
+// NOTE: 現状（2024/10/09）、以下コード使っていない
+
 type Registry struct {
 	Firebase *auth.Client
 }
