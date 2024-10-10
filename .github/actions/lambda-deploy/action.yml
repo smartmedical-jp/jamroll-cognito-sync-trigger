@@ -1,5 +1,5 @@
 name: "Lambda Deploy"
-description: "Deploy Zip of code for Lambda function to AWS Lambda"
+description: "Deploy zip file of binary for Lambda function code"
 inputs:
   assume-role-arn:
     required: true
@@ -9,26 +9,26 @@ inputs:
     required: true
 
 runs:
-    using: "composite"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ inputs.assume-role-arn }}
-          aws-region: ap-northeast-1
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.assume-role-arn }}
+        aws-region: ap-northeast-1
 
-      - name: Generate Zip
-        shell: bash
-        run: |
-          make gen DIR=${{ inputs.dir-name }}
+    - name: Generate zip file
+      shell: bash
+      run: |
+        make gen DIR=${{ inputs.dir-name }}
 
-      - name: Deploy Lambda
-        shell: bash
-        run: |
-          aws lambda update-function-code \
-          --function-name ${{ inputs.env-name }}-${{ inputs.dir-name }} \
-          --zip-file fileb://tmp/${{ inputs.dir-name }}/function.zip
+    - name: Deploy to Lambda
+      shell: bash
+      run: |
+        aws lambda update-function-code \
+        --function-name ${{ inputs.env-name }}-${{ inputs.dir-name }} \
+        --zip-file fileb://tmp/${{ inputs.dir-name }}/function.zip
 
