@@ -34,7 +34,7 @@ func MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.C
 		// TODO 1. Firebase に存在するか確認
 		// TODO 2. Firebase に存在する場合、新パスワードを設定するためのUIを表示
 		// 存在しない場合は、エラーを返す？
-		// TODO 3. Firebase でパスワードリセット処理を行う（何かあって Firebase にまた戻す、みたいな状況を考慮（要らんかも））
+		// TODO 3. Firebase でパスワードリセット処理を行う（何かあって Firebase にまた戻す、みたいな状況を考慮（API経由だけで無理かも/要らんかも））
 		// TODO 4. Firebase でパスワードリセット処理が成功したら、ユーザープールに メールアドレス + 新パスワード でユーザを作成
 	}
 
