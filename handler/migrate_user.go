@@ -28,8 +28,9 @@ func (h Handler) MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUse
 			return event, err
 		}
 	// パスワードリセットがリクエストされ、そのリクエストユーザがユーザプールに存在しない場合のみ、このトリガーが発生する
-	// ・リクエスト時点では、パスワードリセット対象メールアドレスだけ送信される
-	// ・新パスワードを設定するためのUIは別途任意のタイミングで表示必要がある
+	// NOTE:
+	// - リクエスト時点では、パスワードリセット対象メールアドレスだけ送信される
+	// - 新パスワードを設定するためのUIは別途任意のタイミングで表示必要がある
 	case TriggerSourceForgotPassword:
 		// TODO 1. Firebase に存在するか確認
 		// TODO 2. Firebase に存在する場合、新パスワードを設定するためのUIを表示
