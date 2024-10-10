@@ -7,7 +7,7 @@ import (
 )
 
 type Registry struct {
-	firebase *auth.Client
+	Firebase *auth.Client
 }
 
 func NewRegistry(ctx context.Context) (*Registry, error) {
@@ -16,7 +16,7 @@ func NewRegistry(ctx context.Context) (*Registry, error) {
 		return nil, err
 	}
 	rgst := &Registry{
-		firebase: fb,
+		Firebase: fb,
 	}
 
 	return rgst, nil

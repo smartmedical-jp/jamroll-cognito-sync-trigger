@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"context"
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"jam-roll-cognito-sync-trigger/pkg/log"
 )
@@ -11,7 +13,10 @@ const (
 	TriggerSourceForgotPassword = "UserMigration_ForgotPassword"
 )
 
-func (h Handler) MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
+func (h Handler) MigrateUserHandler(
+	ctx context.Context,
+	event events.CognitoEventUserPoolsMigrateUser,
+) (events.CognitoEventUserPoolsMigrateUser, error) {
 	err := log.PrintEventLog(event)
 	if err != nil {
 		return event, err
@@ -19,7 +24,7 @@ func (h Handler) MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUse
 
 	switch event.TriggerSource {
 	case TriggerSourceAuthentication:
-		err = checkUserExistInFirebase(event)
+		err = h.checkUserExistInFirebase(ctx, event)
 		if err != nil {
 			return event, err
 		}
@@ -43,8 +48,16 @@ func (h Handler) MigrateUserHandler(event events.CognitoEventUserPoolsMigrateUse
 }
 
 // Firebase ログインできるか確認
-func checkUserExistInFirebase(event events.CognitoEventUserPoolsMigrateUser) error {
-	// TODO Firebase にログインできるか確認する処理を実装
+func (h Handler) checkUserExistInFirebase(ctx context.Context, event events.CognitoEventUserPoolsMigrateUser) error {
+	user, err := h.registry.Firebase.GetUserByEmail(ctx, event.UserName)
+	if err != nil {
+		return err
+	}
+	fmt.Println("☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★")
+	fmt.Println(user.ProviderID)
+	fmt.Println(user.UID)
+	fmt.Println("☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★")
+
 	return nil
 }
 
