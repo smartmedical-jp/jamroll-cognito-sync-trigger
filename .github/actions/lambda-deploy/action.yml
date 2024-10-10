@@ -23,7 +23,7 @@ runs:
     - name: Generate zip file
       shell: bash
       run: |
-        make gen DIR=${{ inputs.dir-name }}
+        make gen DIR=${{ inputs.dir-name }} ENV=${{ inputs.env-name }}
 
     - name: Deploy to Lambda
       shell: bash

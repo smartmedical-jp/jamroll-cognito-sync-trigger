@@ -3,7 +3,7 @@ package registry
 import (
 	"context"
 	"firebase.google.com/go/v4/auth"
-	"github.com/smartmedical-jp/jam-roll-cognito-sync-trigger/pkg/firebase"
+	"jam-roll-cognito-sync-trigger/pkg/firebase"
 )
 
 type Registry struct {

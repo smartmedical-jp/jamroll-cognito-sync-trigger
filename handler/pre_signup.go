@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/smartmedical-jp/jam-roll-cognito-sync-trigger/pkg/log"
+	"jam-roll-cognito-sync-trigger/pkg/log"
 )
 
 func PreSignupHandler(event events.CognitoEventUserPoolsPreSignup) (events.CognitoEventUserPoolsPreSignup, error) {

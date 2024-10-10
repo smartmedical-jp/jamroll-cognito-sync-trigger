@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	ssm2 "github.com/aws/aws-sdk-go/service/ssm"
-	"github.com/smartmedical-jp/jam-roll-cognito-sync-trigger/pkg/aws/ssm"
+	"github.com/aws/aws-sdk-go/service/ssm"
 	"google.golang.org/api/option"
+	"jam-roll-cognito-sync-trigger/pkg/aws"
+	ssm2 "jam-roll-cognito-sync-trigger/pkg/aws/ssm"
 
 	fb "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
@@ -38,14 +39,13 @@ func NewClient(ctx context.Context) (*auth.Client, error) {
 }
 
 func getFirebaseAccessKey() (string, error) {
-	ssmClient, err := ssm.NewClient()
+	ssmClient, err := ssm2.NewClient()
 	if err != nil {
 		return "", err
 	}
-	paramKey := "/dev/firebase/access_key"
+	paramKey := fmt.Sprintf("/%s/firebase/access_key", aws.Env)
 	withDecryption := true
-
-	firebaseAccessKey, err := ssmClient.GetParameter(&ssm2.GetParameterInput{
+	firebaseAccessKey, err := ssmClient.GetParameter(&ssm.GetParameterInput{
 		Name:           &paramKey,
 		WithDecryption: &withDecryption,
 	})
