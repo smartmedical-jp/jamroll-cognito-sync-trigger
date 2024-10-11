@@ -6,22 +6,22 @@ import (
 )
 
 var (
-	ErrNotExistUser = errors.New("user does not exist")
+	ErrUserAlreadyExists = errors.New("firebase: user already exists")
 )
 
-func ExistByEmail(ctx context.Context, email string) error {
+func ExistByEmail(ctx context.Context, email string) (bool, error) {
 	client, err := NewClient(ctx)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	user, err := client.GetUserByEmail(ctx, email)
 	if err != nil {
-		return err
+		return false, err
 	}
 	if user == nil {
-		return ErrNotExistUser
+		return false, nil
 	}
 
-	return validateUID(user.UID)
+	return true, nil
 }
