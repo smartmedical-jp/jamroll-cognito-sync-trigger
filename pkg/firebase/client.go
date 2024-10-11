@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"google.golang.org/api/option"
-	"jam-roll-cognito-sync-trigger/pkg/aws"
+	"jam-roll-cognito-sync-trigger/env"
 	ssm2 "jam-roll-cognito-sync-trigger/pkg/aws/ssm"
 
 	fb "firebase.google.com/go/v4"
@@ -43,7 +43,7 @@ func getFirebaseAccessKey() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	paramKey := fmt.Sprintf("/%s/firebase/access_key", aws.Env)
+	paramKey := fmt.Sprintf("/%s/firebase/access_key", env.GetEnv())
 	withDecryption := true
 	firebaseAccessKey, err := ssmClient.GetParameter(&ssm.GetParameterInput{
 		Name:           &paramKey,

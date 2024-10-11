@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	ErrUserAlreadyExists = errors.New("firebase: user already exists")
+	ErrUserNotExist = errors.New("firebase: user not exists")
 )
 
 func ExistByEmail(ctx context.Context, email string) (bool, error) {

@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/aws/aws-lambda-go/events"
+	"jam-roll-cognito-sync-trigger/pkg/aws/setting"
 	"jam-roll-cognito-sync-trigger/pkg/firebase"
 	"jam-roll-cognito-sync-trigger/pkg/log"
 )
@@ -16,6 +17,10 @@ func MigrateUserHandler(
 	ctx context.Context,
 	event events.CognitoEventUserPoolsMigrateUser,
 ) (events.CognitoEventUserPoolsMigrateUser, error) {
+	// 初期設定
+	setting.InitSetting(setting.MigrateUser{Event: event})
+
+	// log
 	err := log.PrintEventLog(event)
 	if err != nil {
 		return event, err
@@ -23,8 +28,8 @@ func MigrateUserHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceAuthentication:
-		err = firebase.ExistByEmail(ctx, event.UserName)
-		if err != nil {
+		exist, err := firebase.ExistByEmail(ctx, event.UserName)
+		if err != nil || !exist {
 			return event, err
 		}
 		event, err = migrateUser(event)
