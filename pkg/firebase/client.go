@@ -44,8 +44,6 @@ func getFirebaseAccessKey() (string, error) {
 		return "", err
 	}
 
-	fmt.Printf("/%s/firebase/access_key", env.GetEnv())
-
 	paramKey := fmt.Sprintf("/%s/firebase/access_key", env.GetEnv())
 	withDecryption := true
 	firebaseAccessKey, err := ssmClient.GetParameter(&ssm.GetParameterInput{
