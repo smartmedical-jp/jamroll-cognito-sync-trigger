@@ -4,6 +4,3 @@
 - Lambda 関数が正常に値を返した後でユーザーをユーザープールに作成します。
 
 ![signin.png](assets/img/signin.png)
-
-![password_reset.png](assets/img/password_reset.png)
-
