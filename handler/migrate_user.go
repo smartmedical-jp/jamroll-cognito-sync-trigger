@@ -27,7 +27,7 @@ func MigrateUserHandler(
 		if err != nil {
 			return event, err
 		}
-		event, err = createUserInUserPool(event)
+		event, err = migrateUser(event)
 		if err != nil {
 			return event, err
 		}
@@ -36,8 +36,8 @@ func MigrateUserHandler(
 	return event, nil
 }
 
-// ユーザープールにユーザを作成
-func createUserInUserPool(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
+// ユーザープールにユーザーを移行する
+func migrateUser(event events.CognitoEventUserPoolsMigrateUser) (events.CognitoEventUserPoolsMigrateUser, error) {
 	event.CognitoEventUserPoolsMigrateUserResponse.UserAttributes = map[string]string{
 		"email":          event.UserName,
 		"email_verified": "true",
