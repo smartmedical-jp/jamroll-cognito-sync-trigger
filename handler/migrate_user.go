@@ -31,16 +31,19 @@ func MigrateUserHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceAuthentication:
+		fmt.Println(1)
 		exist, err := firebase.ExistByEmail(ctx, event.UserName)
 		if err != nil || !exist {
 			fmt.Println("User does not exist in Firebase")
 			return event, err
 		}
+		fmt.Println(2)
 		event, err = migrateUser(event)
 		if err != nil {
 			fmt.Println("Failed to migrate user")
 			return event, err
 		}
+		fmt.Println(3)
 	}
 
 	fmt.Println("MigrateUserHandler: Done")
