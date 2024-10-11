@@ -44,6 +44,7 @@ func MigrateUserHandler(
 			return event, err
 		}
 		fmt.Println(3)
+		_ = log.PrintEventLog(event)
 	}
 
 	fmt.Println("MigrateUserHandler: Done")
