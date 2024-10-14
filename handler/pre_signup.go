@@ -37,10 +37,11 @@ func PreSignupHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceSignUp:
-		exist, _ := firebase.ExistByEmail(ctx, email)
-		if exist {
-			return event, firebase.ErrUserAlreadyExist
-		}
+		// TODO 検証完了次第、コメントアウト外す
+		//exist, _ := firebase.ExistByEmail(ctx, email)
+		//if exist {
+		//	return event, firebase.ErrUserAlreadyExist
+		//}
 		exist, err := cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
@@ -66,11 +67,8 @@ func PreSignupHandler(
 	case TriggerSourceExternalProvider:
 		// TODO 以下はサインイン時のみ実行したい
 		exist, err := firebase.ExistByEmail(ctx, email)
-		if err != nil {
+		if err != nil || !exist {
 			return event, err
-		}
-		if !exist {
-			return event, firebase.ErrUserNotExist
 		}
 
 		// サインアップの場合
