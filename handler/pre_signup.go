@@ -36,7 +36,11 @@ func PreSignupHandler(
 	}
 
 	switch event.TriggerSource {
-	case TriggerSourceSignUp, TriggerSourceAdminCreateUser:
+	case TriggerSourceSignUp:
+		exist, _ := firebase.ExistByEmail(ctx, event.UserName)
+		if exist {
+			return event, firebase.ErrUserAlreadyExist
+		}
 		exist, err := cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
@@ -44,7 +48,18 @@ func PreSignupHandler(
 		if exist {
 			return event, ErrUserAlreadyExist
 		}
-
+	case TriggerSourceAdminCreateUser:
+		exist, err := firebase.ExistByEmail(ctx, event.UserName)
+		if err != nil || !exist {
+			return event, err
+		}
+		exist, err = cognito.ExistByEmail(email)
+		if err != nil {
+			return event, err
+		}
+		if exist {
+			return event, ErrUserAlreadyExist
+		}
 	// ソーシャルログインが成功し、そのユーザが Cognito ユーザプールに存在しない場合にトリガされる
 	// - ただし、メールアドレス認証とソーシャルログインのようにログイン方式が異なると同じメールアドレスでも異なるユーザとして扱われてしまう
 	//	 = Cognito ユーザプールに存在する場合も存在しない場合も呼び出される
@@ -58,6 +73,11 @@ func PreSignupHandler(
 			return event, firebase.ErrUserNotExist
 		}
 
+		// サインアップの場合
+		exist, _ = firebase.ExistByEmail(ctx, event.UserName)
+		if exist {
+			return event, firebase.ErrUserAlreadyExist
+		}
 		exist, err = cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
