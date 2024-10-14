@@ -66,23 +66,23 @@ func PreSignupHandler(
 	//	 = Cognito ユーザプールに存在する場合も存在しない場合も呼び出される
 	case TriggerSourceExternalProvider:
 		// TODO 以下はサインイン時のみ実行したい
-		exist, err := firebase.ExistByEmail(ctx, email)
-		if err != nil || !exist {
-			return event, err
-		}
-
-		// サインアップの場合
-		exist, _ = firebase.ExistByEmail(ctx, email)
-		if exist {
-			return event, firebase.ErrUserAlreadyExist
-		}
-		exist, err = cognito.ExistByEmail(email)
-		if err != nil {
-			return event, err
-		}
-		if exist {
-			return event, ErrUserAlreadyExist
-		}
+		//exist, err := firebase.ExistByEmail(ctx, email)
+		//if err != nil || !exist {
+		//	return event, err
+		//}
+		//
+		//// サインアップの場合
+		//exist, _ = firebase.ExistByEmail(ctx, email)
+		//if exist {
+		//	return event, firebase.ErrUserAlreadyExist
+		//}
+		//exist, err = cognito.ExistByEmail(email)
+		//if err != nil {
+		//	return event, err
+		//}
+		//if exist {
+		//	return event, ErrUserAlreadyExist
+		//}
 	}
 
 	return event, nil
