@@ -15,7 +15,7 @@ func PrintEventLog[
 		log.Printf("Error marshaling event: %v", err)
 		return err
 	}
-	log.Println("Received Cognito event:")
+	log.Println("Received Cognito event: ")
 	log.Println(string(eventJSON))
 
 	return nil

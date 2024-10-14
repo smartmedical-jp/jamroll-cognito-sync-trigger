@@ -27,7 +27,7 @@ func PreSignupHandler(
 ) (events.CognitoEventUserPoolsPreSignup, error) {
 	// 初期設定
 	setting.InitSetting(setting.PreSignup{Event: event})
-	//email := event.Request.UserAttributes["email"]
+	email := event.Request.UserAttributes["email"]
 
 	// log
 	err := log.PrintEventLog(event)
@@ -35,65 +35,37 @@ func PreSignupHandler(
 		return event, err
 	}
 
-	//switch event.TriggerSource {
-	//case TriggerSourceSignUp, TriggerSourceAdminCreateUser:
-	//	exist, err := isUserAlreadyExist(ctx, email)
-	//	if err != nil {
-	//		return event, err
-	//	}
-	//	if exist {
-	//		return event, ErrUserAlreadyExist
-	//	}
+	switch event.TriggerSource {
+	case TriggerSourceSignUp, TriggerSourceAdminCreateUser:
+		exist, err := cognito.ExistByEmail(email)
+		if err != nil {
+			return event, err
+		}
+		if exist {
+			return event, ErrUserAlreadyExist
+		}
 
 	// ソーシャルログインが成功し、そのユーザが Cognito ユーザプールに存在しない場合にトリガされる
 	// - ただし、メールアドレス認証とソーシャルログインのようにログイン方式が異なると同じメールアドレスでも異なるユーザとして扱われてしまう
 	//	 = Cognito ユーザプールに存在する場合も存在しない場合も呼び出される
-	//case TriggerSourceExternalProvider:
-	//	// サインイン時
-	//	exist, err := firebase.ExistByEmail(ctx, email)
-	//	if err != nil {
-	//		return event, err
-	//	}
-	//	if !exist {
-	//		return event, firebase.ErrUserNotExist
-	//	}
-	//	exist, err = cognito.ExistByEmail(email)
-	//	if err != nil {
-	//		return event, err
-	//	}
-	//	if exist {
-	//		return event, ErrUserAlreadyExist
-	//	}
-	//
-	//	// サインアップ時
-	//	exist, err = isUserAlreadyExist(ctx, email)
-	//	if err != nil {
-	//		return event, err
-	//	}
-	//	if exist {
-	//		return event, ErrUserAlreadyExist
-	//	}
-	//}
+	case TriggerSourceExternalProvider:
+		// TODO 以下はサインイン時のみ実行したい
+		exist, err := firebase.ExistByEmail(ctx, email)
+		if err != nil {
+			return event, err
+		}
+		if !exist {
+			return event, firebase.ErrUserNotExist
+		}
+
+		exist, err = cognito.ExistByEmail(email)
+		if err != nil {
+			return event, err
+		}
+		if exist {
+			return event, ErrUserAlreadyExist
+		}
+	}
 
 	return event, nil
-}
-
-func isUserAlreadyExist(ctx context.Context, email string) (bool, error) {
-	exist, err := firebase.ExistByEmail(ctx, email)
-	if err != nil {
-		return false, err
-	}
-	if exist {
-		return true, nil
-	}
-
-	exist, err = cognito.ExistByEmail(email)
-	if err != nil {
-		return false, err
-	}
-	if exist {
-		return true, nil
-	}
-
-	return false, nil
 }
