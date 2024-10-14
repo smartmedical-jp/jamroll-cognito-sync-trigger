@@ -91,7 +91,7 @@ func PreSignupHandler(
 		if exist {
 			return event, cognito.ErrUserAlreadyExist
 		}
-
+		event.Request.UserAttributes["email_verified"] = "true"
 	}
 
 	return event, nil
