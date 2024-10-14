@@ -1,6 +1,7 @@
 package cognito
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"jam-roll-cognito-sync-trigger/pkg/aws/setting"
@@ -17,6 +18,7 @@ func ExistByEmail(email string) (bool, error) {
 		Username:   aws.String(email),
 	})
 	if err != nil {
+		fmt.Println("おそらくここが発生されてる", "failed to get user: ", err)
 		return false, err
 	}
 	if user == nil {
