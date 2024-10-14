@@ -51,7 +51,7 @@ func getFirebaseAccessKey() (string, error) {
 		WithDecryption: &withDecryption,
 	})
 	if err != nil {
-		fmt.Println("failed to get firebase access key", err)
+		fmt.Println("failed to get firebase access key: ", err)
 		return "", err
 	}
 
