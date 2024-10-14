@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"errors"
 	"github.com/aws/aws-lambda-go/events"
 	"jam-roll-cognito-sync-trigger/pkg/aws/cognito"
 	"jam-roll-cognito-sync-trigger/pkg/aws/setting"
@@ -15,10 +14,6 @@ const (
 	TriggerSourceSignUp           = "PreSignUp_SignUp"
 	TriggerSourceAdminCreateUser  = "PreSignUp_AdminCreateUser"
 	TriggerSourceExternalProvider = "PreSignUp_ExternalProvider"
-)
-
-var (
-	ErrUserAlreadyExist = errors.New("cognito user pool: user already exists")
 )
 
 func PreSignupHandler(
@@ -37,52 +32,66 @@ func PreSignupHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceSignUp:
-		// TODO 検証完了次第、コメントアウト外す
-		//exist, _ := firebase.ExistByEmail(ctx, email)
-		//if exist {
-		//	return event, firebase.ErrUserAlreadyExist
-		//}
+		exist, _ := firebase.ExistByEmail(ctx, email)
+		if exist {
+			return event, firebase.ErrUserAlreadyExist
+		}
 		exist, err := cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
 		}
 		if exist {
-			return event, ErrUserAlreadyExist
+			return event, cognito.ErrUserAlreadyExist
 		}
+
+	/*
+		移行トリガーがトリガされるか、直接CDKなどでこの操作を行う場合にトリガされる
+		移行トリガーはユーザプールにログインユーザが存在しない場合にのみトリガされるので、既存ユーザとの重複チェックは不要
+		また、SOLID にならないが、migrate_user コントローラー（移行トリガー発火時の実装）で firebase に存在するかチェックしているためここではチェックしない
+		（※ 米国のデータストアに毎回確認しにいく firebase 処理を行う回数を減らすことを優先）
+		さらに、現状（2024/10/09）機能開発のなかでそれが使用される可能性は低いので後者も無視
+	*/
 	case TriggerSourceAdminCreateUser:
+
+	/*
+		ソーシャルログインが成功し、そのユーザが Cognito ユーザプールに存在しない場合に、そのユーザを登録しようとしてトリガされる
+
+		JamRoll では以下のケースでトリガされる
+		1. 移行未完了ユーザのソーシャルログイン
+		   - firebase にはユーザが存在し、Cognito にユーザが存在しない
+		2. サインアップ時のソーシャルログイン
+		   - firebase にも Cognito にもユーザが存在しない
+
+		移行未完了ユーザのソーシャルログインの場合は、firebase にユーザが存在する必要がある。
+		逆に、サインアップの場合は firebase に存在しないユーザである必要がある。
+		```
+		// 移行未完了ユーザのソーシャルログイン
 		exist, err := firebase.ExistByEmail(ctx, email)
 		if err != nil || !exist {
 			return event, err
 		}
-		exist, err = cognito.ExistByEmail(email)
+		// サインアップの場合
+		exist, _ = firebase.ExistByEmail(ctx, email)
+		if exist {
+			return event, firebase.ErrUserAlreadyExist
+		}
+		// その他の処理...
+		```
+		移行未完了ユーザのソーシャルログインでもサインアップでも、Cognito ユーザプールに存在しない場合毎回このトリガーが発火されるが、
+		エラーにすべきケースが真逆であるため、移行未完了ユーザなのかサインアップなのかを区別する仕組みが必要。しかし現状 Cognito にはその仕組みがない。
+		= よって、それはフロントで制御するしかない
+	*/
+	case TriggerSourceExternalProvider:
+		// 認証方法が違うと、メールアドレスが同じでも異なるユーザとして扱われてしまうため、重複チェック
+		// ※ このトリガが発火する時点でログイン自体は問題なく成功しているので、ユーザ登録のみブロックしてアプリケーションにリダイレクトすることになる
+		exist, err := cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
 		}
 		if exist {
-			return event, ErrUserAlreadyExist
+			return event, cognito.ErrUserAlreadyExist
 		}
-	// ソーシャルログインが成功し、そのユーザが Cognito ユーザプールに存在しない場合にトリガされる
-	// - ただし、メールアドレス認証とソーシャルログインのようにログイン方式が異なると同じメールアドレスでも異なるユーザとして扱われてしまう
-	//	 = Cognito ユーザプールに存在する場合も存在しない場合も呼び出される
-	case TriggerSourceExternalProvider:
-		// TODO 以下はサインイン時のみ実行したい
-		//exist, err := firebase.ExistByEmail(ctx, email)
-		//if err != nil || !exist {
-		//	return event, err
-		//}
-		//
-		//// サインアップの場合
-		//exist, _ = firebase.ExistByEmail(ctx, email)
-		//if exist {
-		//	return event, firebase.ErrUserAlreadyExist
-		//}
-		//exist, err = cognito.ExistByEmail(email)
-		//if err != nil {
-		//	return event, err
-		//}
-		//if exist {
-		//	return event, ErrUserAlreadyExist
-		//}
+
 	}
 
 	return event, nil

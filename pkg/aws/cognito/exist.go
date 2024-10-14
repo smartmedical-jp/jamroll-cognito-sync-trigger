@@ -1,10 +1,15 @@
 package cognito
 
 import (
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"jam-roll-cognito-sync-trigger/pkg/aws/setting"
+)
+
+var (
+	ErrUserAlreadyExist = errors.New("cognito user pool: user already exists")
 )
 
 func ExistByEmail(email string) (bool, error) {
