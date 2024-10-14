@@ -37,7 +37,7 @@ func PreSignupHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceSignUp:
-		exist, _ := firebase.ExistByEmail(ctx, event.UserName)
+		exist, _ := firebase.ExistByEmail(ctx, email)
 		if exist {
 			return event, firebase.ErrUserAlreadyExist
 		}
@@ -49,7 +49,7 @@ func PreSignupHandler(
 			return event, ErrUserAlreadyExist
 		}
 	case TriggerSourceAdminCreateUser:
-		exist, err := firebase.ExistByEmail(ctx, event.UserName)
+		exist, err := firebase.ExistByEmail(ctx, email)
 		if err != nil || !exist {
 			return event, err
 		}
@@ -74,7 +74,7 @@ func PreSignupHandler(
 		}
 
 		// サインアップの場合
-		exist, _ = firebase.ExistByEmail(ctx, event.UserName)
+		exist, _ = firebase.ExistByEmail(ctx, email)
 		if exist {
 			return event, firebase.ErrUserAlreadyExist
 		}
