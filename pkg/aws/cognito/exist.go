@@ -13,15 +13,18 @@ func ExistByEmail(email string) (bool, error) {
 		return false, err
 	}
 
-	user, err := client.AdminGetUser(&cognitoidentityprovider.AdminGetUserInput{
+	input := &cognitoidentityprovider.ListUsersInput{
 		UserPoolId: aws.String(setting.GetUserPoolID()),
-		Username:   aws.String(email),
-	})
+		Filter:     aws.String(fmt.Sprintf("email = \"%s\"", email)),
+		Limit:      aws.Int64(1),
+	}
+
+	result, err := client.ListUsers(input)
 	if err != nil {
-		fmt.Println("おそらくここが発生されてる", "failed to get user: ", err)
 		return false, err
 	}
-	if user == nil {
+
+	if len(result.Users) == 0 {
 		return false, nil
 	}
 
