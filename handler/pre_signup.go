@@ -5,7 +5,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"jam-roll-cognito-sync-trigger/pkg/aws/cognito"
 	"jam-roll-cognito-sync-trigger/pkg/aws/setting"
-	"jam-roll-cognito-sync-trigger/pkg/firebase"
 	"jam-roll-cognito-sync-trigger/pkg/log"
 )
 
@@ -32,10 +31,10 @@ func PreSignupHandler(
 
 	switch event.TriggerSource {
 	case TriggerSourceSignUp:
-		exist, _ := firebase.ExistByEmail(ctx, email)
-		if exist {
-			return event, firebase.ErrUserAlreadyExist
-		}
+		//exist, _ := firebase.ExistByEmail(ctx, email)
+		//if exist {
+		//	return event, firebase.ErrUserAlreadyExist
+		//}
 		exist, err := cognito.ExistByEmail(email)
 		if err != nil {
 			return event, err
