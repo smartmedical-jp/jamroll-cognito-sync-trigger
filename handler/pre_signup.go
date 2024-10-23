@@ -92,10 +92,10 @@ func PreSignupHandler(
 		if err != nil {
 			return event, err
 		}
-		event.Request.UserAttributes["email_verified"] = "true"
 		if exist {
 			return events.CognitoEventUserPoolsPreSignup{}, nil
 		}
+		event.Request.UserAttributes["email_verified"] = "true"
 	}
 
 	return event, nil
