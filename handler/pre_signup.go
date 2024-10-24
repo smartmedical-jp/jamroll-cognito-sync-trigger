@@ -86,14 +86,20 @@ func PreSignupHandler(
 		=> よって、それはフロントで制御するしかない
 	*/
 	case TriggerSourceExternalProvider:
-		// 認証方法が違うと、メールアドレスが同じでも異なるユーザとして扱われてしまうため、重複チェック
+		// 認証方法が違うと、メールアドレスが同じでも異なるユーザとして扱われてしまうため、重複するユーザが存在する場合統合する
 		// ※ このトリガが発火する時点でログイン自体は問題なく成功しているので、エラーにはせず、ユーザ登録のみブロックしてアプリケーションにリダイレクトすることになる
-		exist, err := cognito.ExistByEmail(email)
+		// https://qiita.com/Naoki1126/items/e6294f0ed189344a5bd7
+		sameUser, err := cognito.FindByEmail(email)
 		if err != nil {
 			return event, err
 		}
-		if exist {
-			return event, cognito.ErrUserAlreadyExist
+		if sameUser != nil {
+			provider := cognito.GetExternalProvider(event)
+			err := cognito.AdminLinkUser(sameUser, event, provider)
+			if err != nil {
+				return event, err
+			}
+			return event, nil
 		}
 		event.Request.UserAttributes["email_verified"] = "true"
 	}
