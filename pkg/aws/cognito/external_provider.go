@@ -8,7 +8,7 @@ import (
 type ExternalProvider string
 
 const (
-	Google    ExternalProvider = "google"
+	Google    ExternalProvider = "Google"
 	Microsoft ExternalProvider = "microsoft"
 	Unknown   ExternalProvider = ""
 )
