@@ -94,8 +94,7 @@ func PreSignupHandler(
 	*/
 	case TriggerSourceExternalProvider:
 		// 認証方法が違うと、メールアドレスが同じでも異なるユーザとして扱われてしまうため、重複するユーザが存在する場合統合する
-		// ※ このトリガが発火する時点でログイン自体は問題なく成功しているので、エラーにはせず、ユーザ登録のみブロックしてアプリケーションにリダイレクトすることになる
-		// https://qiita.com/Naoki1126/items/e6294f0ed189344a5bd7
+		// （このトリガが発火する時点でログイン自体は成功しており、設定されたコールバックURLに戻されてしまうのでエラーを出しても意味がない）
 		sameUser, err := cognito.FindByEmail(email)
 		if err != nil {
 			return event, err
