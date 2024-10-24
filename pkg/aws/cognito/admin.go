@@ -21,11 +21,11 @@ func AdminLinkUser(
 	}
 
 	// https://docs.aws.amazon.com/ja_jp/cognito-user-identity-pools/latest/APIReference/API_AdminLinkProviderForUser.html
-	sourceUserName := strings.Split(event.UserName, "_")[0]
+	sourceUserName := strings.Split(event.UserName, "_")[1]
 	if sourceUserName == "" {
 		return fmt.Errorf("sourceUserName is empty")
 	}
-	res, err := client.AdminLinkProviderForUser(&cognitoidentityprovider.AdminLinkProviderForUserInput{
+	_, err = client.AdminLinkProviderForUser(&cognitoidentityprovider.AdminLinkProviderForUserInput{
 		DestinationUser: &cognitoidentityprovider.ProviderUserIdentifierType{
 			ProviderAttributeValue: aws.String(*destinationUser.Username),
 			ProviderName:           aws.String("Cognito"),
@@ -40,7 +40,6 @@ func AdminLinkUser(
 	if err != nil {
 		return err
 	}
-	fmt.Println(res)
 
 	return nil
 }
